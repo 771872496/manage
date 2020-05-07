@@ -1,0 +1,357 @@
+{% extends 'basic/base.html' %}
+
+{% block title %}
+    Fail-Report
+{% endblock %}
+
+{% block main_content %}
+
+    {#    <div style="overflow:scroll;">#}
+
+    <section class="wrapper">
+
+        <caption><h2 class="text-center">Fail-Report</h2></caption>
+
+        {#        <form action="/ltt/facility/add" method="POST" style="display: inline" enctype='multipart/form-data'>#}
+        {#            {% if request.session.login_user.authority == '系统管理员' or request.session.login_user.authority == '管理员' %}#}
+        {#                <a data-toggle="modal" class="btn btn-default" href="/add/#add1">#}
+        {#                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;新增设备</a>#}
+        {##}
+        {#                <div class="modal fade" id="add1" tabindex="-1" role="dialog" aria-labelledby="add11">#}
+        {#                    <div class="modal-dialog" role="document">#}
+        {#                        <div class="modal-content">#}
+        {#                            <div class="modal-header">#}
+        {#                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span#}
+        {#                                        aria-hidden="true">&times;</span></button>#}
+        {#                                <h4 class="modal-title" id="add11">添加设备</h4>#}
+        {#                            </div>#}
+        {#                            <div class="modal-body">#}
+        {#                                <ul style="line-height: 25px">#}
+        {#                                    <li>#}
+        {#                                        <label><span>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别:</span></label>#}
+        {#                                        <select name="c_name">{% for i in class_ %}#}
+        {#                                            <option value="{{ i.c_name }}">#}
+        {#                                                {{ i.c_name }}#}
+        {#                                            </option>{% endfor %}#}
+        {#                                        </select>#}
+        {#                                    </li>#}
+        {#                                    <li>#}
+        {#                                        <label><span>机&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;种:</span></label>#}
+        {#                                        <select name="k_name">{% for i in kind %}#}
+        {#                                            <option value="{{ i.k_name }}">#}
+        {#                                                {{ i.k_name }}#}
+        {#                                            </option>{% endfor %}#}
+        {#                                        </select>#}
+        {#                                    </li>#}
+        {#                                    <li>#}
+        {#                                        <label><span>料&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:&nbsp;</span></label>#}
+        {#                                        <input class="text" type="text" name="pn" autocomplete="off"/>#}
+        {#                                    </li>#}
+        {#                                    <li>#}
+        {#                                        <label><span>料号描述:&nbsp;</span></label>#}
+        {#                                        <input class="text" type="text" name="pn_desc" autocomplete="off"/>#}
+        {#                                    </li>#}
+        {#                                    <li>#}
+        {#                                        <label><span>入库时间:&nbsp;</span></label>#}
+        {#                                        <input id="put_time" type="text" name="put_time" autocomplete="off"/>#}
+        {#                                    </li>#}
+        {#                                    <li>#}
+        {#                                        <label><span>出库时间:&nbsp;</span></label>#}
+        {#                                        <input id="out_time" type="text" name="out_time" autocomplete="off"/>#}
+        {#                                    </li>#}
+        {##}
+        {##}
+        {#                                    <li>#}
+        {#                                        <label><span>测试项目:&nbsp;</span></label>#}
+        {#                                        <select name="p_name">{% for i in project %}#}
+        {#                                            <option value="{{ i.p_name }}">#}
+        {#                                                {{ i.p_name }}#}
+        {#                                            </option>{% endfor %}#}
+        {#                                        </select>#}
+        {#                                    </li>#}
+        {#                                    <li>#}
+        {#                                        <label><span>开始时间:&nbsp;</span></label>#}
+        {#                                        <input type="text" name="start_time" id="start_time" autocomplete="off">#}
+        {#                                    </li>#}
+        {#                                    <li>#}
+        {#                                        <label><span>结束时间:&nbsp;</span></label>#}
+        {#                                        <input type="text" name="over_time" id="over_time" autocomplete="off">#}
+        {#                                    </li>#}
+        {#                                    <li>#}
+        {#                                        <label><span>测试结果:&nbsp;</span></label>#}
+        {#                                        <select name="result">#}
+        {#                                            <option value="On Going">On Going</option>#}
+        {#                                            <option value="PASS">PASS</option>#}
+        {#                                            <option value="FAIL">FAIL</option>#}
+        {#                                        </select>#}
+        {#                                    </li>#}
+        {#                                    <li>#}
+        {#                                        <label><span>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注&nbsp;:&nbsp;</span></label>#}
+        {#                                        <input class="text" type="text" name="remark" autocomplete="off"/>#}
+        {#                                    </li>#}
+        {#                                    <li>#}
+        {#                                        <label><span>测试Log:&nbsp;</span></label>#}
+        {#                                        <input style="display: inline" class="text" type="file" name="log"/>#}
+        {#                                    </li>#}
+        {#                                    <li>#}
+        {#                                        <label><span>操&nbsp;&nbsp;作&nbsp;&nbsp;人:&nbsp;</span></label>#}
+        {#                                        {{ login_user.name }}#}
+        {#                                    </li>#}
+        {#                                    <br>#}
+        {#                                    <div class="form-group form-actions">#}
+        {#                                        {{ error }}#}
+        {#                                        <div class="form-group form-actions modal-footer">#}
+        {#                                            <button type="button" class="btn btn-default btn-sm"#}
+        {#                                                    data-dismiss="modal">取消#}
+        {#                                            </button>#}
+        {#                                            <button id='add' type="submit" class="btn btn-primary btn-sm">保存#}
+        {#                                            </button>#}
+        {#                                        </div>#}
+        {##}
+        {#                                    </div>#}
+        {#                                    </li>#}
+        {#                                </ul>#}
+        {#                            </div>#}
+        {#                        </div>#}
+        {#                    </div>#}
+        {#                </div>#}
+        {#                </form>#}
+        {#                &nbsp;#}
+        {#                <button data-toggle="modal" onclick="exportData()" class="btn btn-default">#}
+        {#                    <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>&nbsp;导出设备#}
+        {#                </button>#}
+        {#                #}
+        {#            {% else %}#}
+        {##}
+        {#            {% endif %}#}
+
+
+        <table id="table" data-toggle="table"
+               class="text-center center table table-bordered">
+            {#style="min-width:1500px;"#}
+
+        </table>
+
+    </section>
+
+    {#    </div>#}
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script src="../../static/table/js/hebing.js"></script>
+    <script>
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#start_time' //指定元素
+        });
+        laydate.render({
+            elem: '#over_time' //指定元素
+        });
+        laydate.render({
+            elem: '#put_time' //指定元素
+        });
+        laydate.render({
+            elem: '#out_time' //指定元素
+        });
+
+
+        $("#table").bootstrapTable({
+            toolbar: '#toolbar',                //自定义工具按钮
+            url: '/facility_fail_json',                           //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            undefinedText: '-',
+            pagination: true,                   //是否显示分页（*）
+            pageSize: 15,                       //每页的记录行数（*）
+            pageList: [10, 15, 20, 50, 100, 'All'], //可供选择的每页的行数（*）
+            paginationPreText: "上一页",
+            paginationNextText: "下一页",
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber: 1,                      //初始化加载第一页，默认第一页
+            search: false,                       //是否显示表格搜索
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: false,                  //是否显示刷新按钮
+            minimumCountColumns: 2,             //最少允许的列数
+            showToggle: false,                   //是否显示详细视图和列表视图的切换按钮
+
+            queryParamsType: "",
+            queryParams: function (params) {
+                var temp = {
+                    'pageSize': params.pageSize,
+                    'pageNumber': params.pageNumber,
+                    'searchText': params.searchText,
+                    'sortName': params.sortName,
+                    'sortOrder': params.sortOrder,
+                };
+                return temp;
+            },
+            columns: [
+                {
+                    field: 'id',
+                    title: 'ID',
+                    width: '1%',
+                    align: "center",//水平
+                    sortable: false,
+                    // 自定义 ID
+                    formatter: function (value, row, index) {
+                        //获取每页显示的数量
+                        var pageSize = $('#table').bootstrapTable('getOptions').pageSize;
+                        //获取当前是第几页
+                        var pageNumber = $('#table').bootstrapTable('getOptions').pageNumber;
+                        //返回序号，注意index是从0开始的，所以要加上1
+                        return pageSize * (pageNumber - 1) + index + 1;
+                    }
+                },
+                {
+                    field: 'c_name',
+                    title: '类别',
+                    align: "center",//水平
+                }, {
+                    field: 'k_name',
+                    title: '机种',
+                    align: "center",//水平
+                }, {
+                    field: 'sn',
+                    title: 'SN',
+                    align: "center",//水平
+                }, {
+                    field: 'pn',
+                    title: '料号',
+                    align: "center",//水平
+                }, {
+                    field: 'pn_desc',
+                    title: '料号描述',
+                    align: "center",//水平
+                    visible: false   //这一列隐藏
+                }, {
+                    field: 'put_time',
+                    title: '入库时间',
+                    width: '7%',
+                    align: "center",//水平
+                }, {
+                    field: 'execute_user',
+                    title: '操作人',
+                    align: "center",//水平
+                    visible: false   //这一列隐藏
+                }, {
+                    field: 'p_name',
+                    title: '测试项目',
+                    align: "center",//水平
+                }, {
+                    field: 'start_time',
+                    title: '开始时间',
+                    width: '7%',
+                    align: "center",//水平
+                }, {
+                    field: 'over_time',
+                    title: '结束时间',
+                    width: '7%',
+                    align: "center",//水平
+                    formatter: function (value, row, index) {
+                        if (value == 'None') {
+                            return ""
+                        } else {
+                            return value
+                        }
+                    }
+                }, {
+                    field: 'result',
+                    title: '测试结果',
+                    align: "center",//水平
+                    // 表格样式
+                    cellStyle: function (value, row, index) {
+                        if (value == 'PASS') {
+                            return {css: {"background-color": "#b2ffaa"}}
+                        }
+                        if (value == 'FAIL') {
+                            return {css: {"background-color": "#ff635c"}}
+                        }
+                        if (value == 'On Going') {
+                            return {css: {"background-color": "#f9ff9e"}}
+                        } else {
+                            return {css: {"background-color": ""}}
+                        }
+                    }
+                }, {
+                    field: 'log',
+                    title: 'Log',
+                    align: "center",//水平
+                    formatter: function (value, row, index) {
+                        if (value) {
+                            return "<a href='/media/" + row["log"] + "'><i class='fa fa-file-text-o'></i></a> "
+                        } else {
+                            return ""
+                        }
+                    }
+                }, {
+                    field: 'remark',
+                    title: '备注',
+                    align: "center",//水平
+                    formatter: function (value, row, index, field) {
+
+                        return "<span style='display: block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;' title='" + value + "'>" + value + "</span>";
+                    },
+                    // 内容过多显示 ......
+                    cellStyle: function (value, row, index, field) {
+                        return {
+                            css: {
+                                "white-space": "nowrap",
+                                "text-overflow": "ellipsis",
+                                "overflow": "hidden",
+                                "max-width": "150px"
+                            }
+                        };
+                    }
+                },
+                {
+                    field: 'out_time',
+                    title: '出库时间',
+                    width: '7%',
+                    align: "center",//水平
+                    formatter: function (value, row, index) {
+                        if (value == 'None') {
+                            return ""
+                        } else {
+                            return value
+                        }
+                    }
+                }, {
+                    title: '操作',
+                    field: 'publicationTime',
+                    width: '5%',
+                    align: "center",//水平
+                    // 自定义按钮
+                    formatter: function (value, row, index) {
+                        return "<a href='/ltt/facility/edit/" + row["id"] + "'><button class='btn btn-xs btn-default text-primary'>编辑</button></a> "
+                        {# + "<a href='/ltt/detail/" + row["id"] + "'><button class=\"btn btn-xs btn-default text-primary\">详情</button></a>"#}
+                    }
+                },
+            ],
+        });
+
+
+        // 自定义按钮导出数据
+        function exportData() {
+            $('#table').tableExport({
+                type: 'xlsx',
+                exportDataType: "all",      //默认basic：只导出当前页的表格数据；all：导出所有数据；selected：导出选中的数据
+                ignoreColumn: [14],            //忽略某一列的索引
+                fileName: '设备状态信息',              //文件名称设置
+                worksheetName: 'Sheet1',          //表格工作区名称
+                tableName: '设备状态数据表',
+                excelstyles: ['background-color', 'color', 'font-size', 'font-weight'],
+                //onMsoNumberFormat: DoOnMsoNumberFormat
+                onCellHtmlData: function (cell, row, col, data) {//处理导出内容,自定义某一行、某一列、某个单元格的内容
+                    console.info(data);
+                    return data;
+                },
+            });
+        }
+
+    </script>
+
+{% endblock %}
+

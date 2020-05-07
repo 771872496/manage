@@ -1,0 +1,86 @@
+<aside>
+    <div id="sidebar" class="nav-collapse">
+        <!-- sidebar menu start-->
+        <ul class="sidebar-menu" id="nav-accordion">
+
+            <p class="centered"><a href="#">
+                <img src="/static/img/touxiang.jpg"
+                     width="200" height="100"></a></p>
+            {#        class="img-circle"#}
+            <h5 class="centered">
+                {{ request.session.login_user.name }}
+                |
+                {% if login_user.ltt_authority == '管理员' %}
+                    管理员
+                {% elif login_user.ltt_authority == '系统管理员' %}
+                    系统管理员
+                {% elif login_user.zgg_authority == '管理员' %}
+                    管理员
+                {% else %}
+                    普通用户
+                {% endif %}
+            </h5>
+
+
+            {#                        <li class="mt">#}
+            {#                            <a href="/zgg/user">#}
+            {#                                <i class="fa fa-users"></i>#}
+            {#                                <span>用户管理</span>#}
+            {#                            </a>#}
+            {#                        </li>#}
+            {% if login_user.ltt_authority == '系统管理员' %}
+                <li class="sub-menu">
+                    <a href="javascript:;">
+                        <i class="fa fa-users"></i>
+                        <span>用户管理</span>
+                    </a>
+                    <ul class="sub">
+                            <li><a href="/zgg/user">治工具用户</a></li>
+                            <li><a href="/ltt/user">LTT用户</a></li>
+                    </ul>
+                </li>
+            {% elif login_user.zgg_authority == '管理员' %}
+                <li class="mt">
+                    <a href="/zgg/user">
+                        <i class="fa fa-users"></i>
+                        <span>治工具用户</span>
+                    </a>
+                </li>
+            {% elif login_user.ltt_authority == '管理员' %}
+                <li class="mt">
+                    <a href="/ltt/user">
+                        <i class="fa fa-users"></i>
+                        <span>LTT用户</span>
+                    </a>
+                </li>
+
+            {% endif %}
+
+            <li class="sub-menu">
+                <a href="javascript:;">
+                    <i class="fa fa-ge"></i>
+                    <span>治工具管理系统</span>
+                </a>
+                <ul class="sub">
+                    {#                    <li><a href="/zgg/user">用户管理</a></li>#}
+                    <li><a href="/zgg/bill">资产信息库</a></li>
+                    {#                    <li><a href="/zgg/search">资产信息查询</a></li>#}
+                    <li><a href="/zgg/visual">治工具看板</a></li>
+                </ul>
+            </li>
+
+            <li class="sub-menu">
+                <a href="javascript:;">
+                    <i class="fa fa-sitemap"></i>
+                    <span>LTT管理系统</span>
+                </a>
+                <ul class="sub">
+                    <li><a href="/ltt/facility">LTT设备状态管理</a></li>
+                    <li><a href="/ltt/facility/fail">Fail-Report</a></li>
+                    <li><a href="/ltt/board">LTT看板</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- sidebar menu end-->
+    </div>
+</aside>

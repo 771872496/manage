@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+    <link rel="icon" href="../../static/img/favicon.ico" type="image/x-icon"/>
+    <title>{% block title %}{% endblock %}-管理平台</title>
+
+    {% include 'basic/base_css.html' %}
+
+</head>
+
+<body>
+
+<section id="container">
+
+    <!--header-->
+    {% include 'basic/base_top.html' %}
+
+
+    <!--sidebar start-->
+    {% include 'basic/sidebar_menu.html' %}
+    <!--sidebar end-->
+
+    <!-- **********************************************************************************************************************************************************
+    MAIN CONTENT
+    *********************************************************************************************************************************************************** -->
+    <!--main content start-->
+    <section class="main" id="main-content">
+        {% block main_content %}
+
+        {% endblock %}
+    </section>
+    <!--main content end-->
+    <!--footer start-->
+
+{#    <footer class="common_footer">#}
+{#        <p class="text-center">Copyright 2010 - 2019 山石网科，保留一切权利。</p>#}
+{#        <p class="text-center">&copy;2019 Hillstone Networks All Rights Reserved. | Manage 1.0.0</p>#}
+{#    </footer>#}
+    <!--footer end-->
+
+</section>
+
+{% include 'basic/base_js.html' %}
+
+{% block js %}
+
+{% endblock %}
+
+</body>
+</html>

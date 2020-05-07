@@ -1,0 +1,139 @@
+{% extends 'basic/base.html' %}
+{% block title %}
+    资产信息详情
+{% endblock %}
+
+{% block css %}
+    <style>
+        label {
+            text-align: center !important;
+        }
+    </style>
+{% endblock %}
+
+{% block main_content %}
+
+    <section class="wrapper">
+        <div class="form-panel">
+            <h4 class="mb"><i class="fa fa-angle-right">&nbsp;</i>{{ bill.zc_name }} - 资产详情</h4>
+            <form action="/zgg/bill/detail/{{ bill.bill_id }}" class="form-horizontal style-form" method="GET">
+
+                <!-- 获取工单ID -->
+                <input type="hidden" name="bill_id" value="{{ bill.bill_id }}">
+
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label">资产类别</label>
+                    <div class="col-sm-2">
+                        <b class="form-control">{{ bill.zc_type }}</b>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">资产编号</label>
+                    <div class="col-sm-2">
+                        <b class="form-control">{{ bill.zc_number }}</b>
+                    </div>
+
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label">资产名称</label>
+                    <div class="col-sm-5">
+                        <b class="form-control">{{ bill.zc_name }}</b>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label">属性1</label>
+                    <div class="col-sm-2">
+                        <b class="form-control">{{ bill.pro1 }}</b>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label">属性2</label>
+                    <div class="col-sm-2">
+                        <b class="form-control">{{ bill.pro2 }}</b>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">属性3</label>
+                    <div class="col-sm-2">
+                        <b class="form-control">{{ bill.pro3 }}</b>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label">资产地点</label>
+                    <div class="col-sm-2">
+                        <b class="form-control">{{ bill.zc_site }}</b>
+
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label">OA请求ID</label>
+                    <div class="col-sm-5">
+                        <b class="form-control">{{ bill.oa_id }}</b>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    {#                    <label class="col-sm-2 control-label">录入时间</label>#}
+                    <label class="col-sm-2 control-label">录入时间</label>
+                    <div class="col-sm-2">
+                        <b class="form-control">{{ bill.start_time|date:"Y年m月d日H:i" }}</b>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label">领用人</label>
+                    <div class="col-sm-2">
+                        <b class="form-control">{{ bill.receive_name }}</b>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label">申请单</label>
+                    <div class="col-sm-10">
+                        <img src=" {{ MEDIA_URL }}{{ bill.other_bill }}" style="height:250px; width: 500px">
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label">接收单</label>
+                    <div class="col-sm-10">
+                        <img src=" {{ MEDIA_URL }}{{ bill.reception_bill }}" style="height:250px; width: 500px">
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label">是否贴标签</label>
+                    <div class="col-sm-1">
+                        <b class="form-control">{{ bill.tag }}</b>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label">状态</label>
+                    <div class="col-sm-1">
+                        <b class="form-control">{{ bill.state }}</b>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label">操作人员</label>
+                    <div class="col-sm-1">
+                        <b class="form-control">{{ bill.execute_user }}</b>
+
+                    </div>
+                </div>
+
+                <div class="form-group text-center">
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-lg-2">
+                        <a class="btn btn-warning btn-round btn-primary" href="javascript:history.go(-1)">返回</a>
+                    </div>
+                </div>
+            </form>
+
+            <div class="text-danger">
+                {{ error }}
+            </div>
+        </div>
+
+
+    </section><! --/wrapper -->
+
+
+{% endblock %}
+{% block js %}
+    {% include 'basic/base_form_js.html' %}
+{% endblock %}

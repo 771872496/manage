@@ -1,0 +1,154 @@
+{% extends 'basic/base.html' %}
+{% block title %}
+    资产信息编辑
+{% endblock %}
+
+{% block css %}
+    <style>
+        label {
+            text-align: center !important;
+        }
+    </style>
+{% endblock %}
+
+{% block main_content %}
+
+    <section class="wrapper">
+        <div class="form-panel">
+            <h4 class="mb"><i class="fa fa-angle-right">&nbsp;</i>{{ bill.zc_name }} - 资产信息编辑</h4>
+            <form action="/zgg/bill/edit/{{ bill.bill_id }}" class="form-horizontal style-form" method="post"
+                  enctype='multipart/form-data'>
+
+                <!-- 获取工单ID -->
+                <input type="hidden" name="bill_id" value="{{ bill.bill_id }}">
+
+                <div class="form-group ">
+                    <label class="col-sm-2 col-sm-2 control-label">资产类别</label>
+                    <div class="col-sm-2">
+                        <input name="zc_type" id="zc_type" value="{{ bill.zc_type }}" class="form-control"
+                               readonly="readonly">
+
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 col-sm-2 control-label">资产编号</label>
+                    <div class="col-sm-2">
+                        <input type="text" name="zc_number" value="{{ bill.zc_number }}" class="form-control"
+                               readonly="readonly">
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 col-sm-2 control-label">资产名称</label>
+                    <div class="col-sm-5">
+                        <input type="text" name="zc_name" value="{{ bill.zc_name }}" class="form-control"
+                               readonly="readonly">
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 col-sm-2 control-label">属性1</label>
+                    <div class="col-sm-2">
+                        <input type="text" name="pro1" value="{{ bill.pro1 }}" class="form-control" autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 col-sm-2 control-label">属性2</label>
+                    <div class="col-sm-2">
+                        <input type="text" name="pro2" value="{{ bill.pro2 }}" class="form-control" autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 col-sm-2 control-label">属性3</label>
+                    <div class="col-sm-2">
+                        <input type="text" name="pro3" value="{{ bill.pro3 }}" class="form-control" autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 col-sm-2 control-label">资产地点</label>
+                    <div class="col-sm-2">
+                        <input type="text" name="zc_site" value="{{ bill.zc_site }}" class="form-control" autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 col-sm-2 control-label">OA请求ID</label>
+                    <div class="col-sm-5">
+                        <input type="text" name="oa_id" value="{{ bill.oa_id }}" class="form-control" autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 col-sm-2 control-label">领用人</label>
+                    <div class="col-sm-2">
+                        <input type="text" name="receive_name" value="{{ bill.receive_name }}" class="form-control" autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 col-sm-2 control-label">申请单</label>
+                    <div class="col-sm-2">
+                        <img src="{{ MEDIA_URL }}{{ bill.other_bill }}" {% if bill.other_bill %}style="height:250px; width: 500px"{% endif %}>
+                        <input type="file" name="other_bill" value="{{ bill.other_bill }}">
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 col-sm-2 control-label">接收单</label>
+                    <div class="col-sm-2">
+                        <img src="{{ MEDIA_URL }}{{ bill.reception_bill }}" {% if bill.reception_bill %}style="height:250px; width: 500px"{% endif %}>
+                        <input type="file" name="reception_bill" value="{{ bill.reception_bill }}">
+                    </div>
+
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 col-sm-2 control-label">是否贴标签</label>
+                    <div class="col-sm-1">
+                        <select name="tag" class="form-control">
+                            <option value="{{ bill.tag }}">{{ bill.tag }}</option>
+                            <option value="{% ifequal  bill.tag '是' %}否{% endifequal %}{% ifequal  bill.tag '否' %}是{% endifequal %}">
+                                {% ifequal  bill.tag '是' %}否{% endifequal %}
+                                {% ifequal  bill.tag '否' %}是{% endifequal %}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 col-sm-2 control-label">状态</label>
+                    <div class="col-sm-1">
+                        <select name="state" class="form-control" id="state">
+                            <option value="{{ bill.state }}">{{ bill.state }}</option>
+                            <option value="{% ifequal  bill.state '启用' %}报废{% endifequal %}{% ifequal  bill.state '报废' %}启用{% endifequal %}">
+                                {% ifequal  bill.state '启用' %}报废{% endifequal %}
+                                {% ifequal  bill.state '报废' %}启用{% endifequal %}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 col-sm-2 control-label">操作人员</label>
+                    <div class="col-sm-1">
+                        <input type="text" name="execute_user" value="{{ bill.execute_user }}" class="form-control"
+                               readonly="readonly">
+                    </div>
+                </div>
+
+
+                <div class="form-group text-center">
+                    <label class="col-lg-2 col-sm-2 control-label  "></label>
+                    <div class="col-lg-2">
+                        {#                        <a class="btn btn-warning btn-round btn-primary" href="/zgg/bill">取消</a>#}
+                        <a class="btn btn-warning btn-round btn-primary" href="javascript:history.go(-1)">返回</a>
+                        <button type="submit" class="btn btn-round btn-primary ">保存</button>
+
+                    </div>
+                </div>
+            </form>
+
+            <div class="text-danger">
+                {{ error }}
+            </div>
+        </div>
+
+
+    </section><! --/wrapper -->
+
+{% endblock %}
+
+{% block js %}
+    {% include 'basic/base_form_js.html' %}
+{% endblock %}

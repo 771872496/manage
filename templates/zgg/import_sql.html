@@ -1,0 +1,42 @@
+{% extends 'basic/base.html' %}
+{% block title %}
+    批量导入
+{% endblock %}
+
+
+{% block main_content %}
+    <section class="wrapper">
+        <div class="form-panel">
+            <h4 class="mb"><i class="fa fa-angle-right">&nbsp;</i>批量导入</h4>
+            <form action="/zgg/import_sql" enctype="multipart/form-data" class="form-horizontal style-form"
+                  method="post">
+
+                <div class="form-group ">
+                    <div class="col-sm-10">
+                        <input type="file" name="file" class="fileupload-new">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-2 control-label"></label>
+                    <div class="col-lg-10">
+{#                        <a class="btn btn-warning btn-round btn-primary" href="javascript:history.go(-1)">返回</a>#}
+                        <a class="btn btn-warning btn-round btn-primary" href="/zgg/bill">返回</a>
+                        <button class="submit-row btn btn-round btn-primary">确定</button>
+                    </div>
+                </div>
+            </form>
+            <div class="text-danger">
+                {{ error }}
+            </div>
+
+        </div>
+
+
+    </section><! --/wrapper -->
+
+{% endblock %}
+
+{% block js %}
+    {% include 'basic/base_form_js.html' %}
+{% endblock %}

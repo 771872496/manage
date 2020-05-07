@@ -1,0 +1,77 @@
+{% extends 'basic/base.html' %}
+{% block title %}
+    接收单
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block main_content %}
+
+    <section class="wrapper">
+        <div class="form-panel">
+            <h4 class="mb"><i class="fa fa-angle-right">&nbsp;</i>修改接收单</h4>
+            <form action="/zgg/bill/reception" class="form-horizontal style-form" method="post"
+                  enctype='multipart/form-data'>
+
+                <!-- 获取工单ID -->
+                <input type="hidden" name="bill_id" value="{{ bill_id }}">
+
+
+                <div class="form-group ">
+                    <label class="col-sm-2 col-sm-2 control-label">接收单</label>
+                    <div class="col-sm-10">
+                        {#                        <b class="form-control">{{ reception_bill }}</b>#}
+                        {#                        <img id="avatar-img" src="{{ MEDIA_URL }}{{ reception_bill }}">#}
+                        {#                        <div id="avatar-input">13</div>#}
+                        {#                        <input id="submit-btn" type="file" name="reception_bill"  value="{{ reception_bill }}">#}
+                        <label><img id="avatar-img" src="{{ MEDIA_URL }}{{ reception_bill }}">
+                        <input id="avatar-input" hidden type="file" name="reception_bill"
+                                    value="{{ reception_bill }}"></label>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="form-group text-center">
+                    <label class="col-lg-2 col-sm-2 control-label  "></label>
+                    <div class="col-lg-10">
+                        {#                        <button type="button" class="btn btn-warning btn-round btn-primary" href="/zgg/bill" >取消</button>#}
+                        <a class="btn btn-warning btn-round btn-primary" href="javascript:history.go(-1)">返回</a>
+                        <button type="submit" class="btn btn-round btn-primary ">确定</button>
+                        {#                        <input type="button" οnclick="history.go(-1)" value="back">#}
+
+                    </div>
+                </div>
+            </form>
+
+            <div class="text-danger">
+                {{ error }}
+            </div>
+        </div>
+
+
+    </section><! --/wrapper -->
+
+{% endblock %}
+
+{% block js %}
+    {% include 'basic/base_form_js.html' %}
+    <script>
+        // 上传文件按钮（label里的图片）点击事件
+        $('#avatar-input').on('change', function () {
+            // 获取用户最后一次选择的图片
+            var choose_file = $(this)[0].files[0];
+            // 创建一个新的FileReader对象，用来读取文件信息
+            var reader = new FileReader();
+            // 读取用户上传的图片的路径
+            reader.readAsDataURL(choose_file);
+            // 读取完毕之后，将图片的src属性修改成用户上传的图片的本地路径
+            reader.onload = function () {
+                $("#avatar-img").attr("src", reader.result)
+            }
+        });
+    </script>
+{% endblock %}

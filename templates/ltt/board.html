@@ -1,0 +1,360 @@
+{% extends 'basic/base.html' %}
+
+{% block title %}
+    LTT看板
+{% endblock %}
+
+
+{% block main_content %}
+
+    <section class="wrapper">
+        <caption><h2 class="text-center"> LTT 自动化显示看板</h2></caption>
+        <div class="row">
+            <div class="col-md-6" style="float:left;">
+                <div id="bar" style="width:650px;height:400px"></div>
+            </div>
+
+            <div class="col-md-6" style="float:right;">
+                <div id="Pie" style="width: 650px;height:400px;"></div>
+            </div>
+
+        </div>
+
+        <table id="table" class="table-sm text-center center table table-bordered"></table>
+
+    </section>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script src="https://cdn.bootcss.com/echarts/3.0.0/echarts.min.js"></script>
+    <script>
+        // 饼图
+        function Pie(data,) {
+            var myChart = echarts.init(document.getElementById('Pie'));
+            option = {
+                title: {
+                    text: '06H在库统计',
+                    subtext: '',
+                    x: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: data[1]
+                },
+                color: ['#2b388a', '#ffe100', '#ff332b'],
+                series: [
+                    {
+                        name: '06H在库统计',
+                        type: 'pie',
+                        radius: '55%',
+                        center: ['53%', '50%'],
+                        data: data[0],
+
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0,0,0,0.67)'
+                            }
+                        },
+                        label: {
+                            normal: {
+                                //饼形图显示格式
+                                formatter: '{b} : {d}% ',
+                                rich: {
+                                    b: {
+                                        color: 'white',
+                                        fontSize: 14,
+                                        lineHeight: 33
+                                    },
+                                    //设置百分比数字颜色
+                                    per: {
+                                        color: '#00B4FB',
+                                        fontSize: 14,
+                                        padding: [2, 4],
+                                        borderRadius: 2
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                ]
+            };
+            myChart.setOption(option);
+        }
+
+
+        // 柱状图
+        function Bar(data) {
+            var myChart = echarts.init(document.getElementById('bar'));
+            option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                legend: {
+                    data: ['完成', '在测', '异常']
+                },
+
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['2018', '2019', '2020']
+                },
+                yAxis: {
+                    type: 'value',
+
+                },
+                series: [
+                    {
+                        name: '完成',
+                        type: 'bar',
+                        barWidth: 50,
+                        stack: '总量',
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true,//是否展示
+                                },
+                                color: '#2b388a',
+                            }
+                        },
+                        data: data[0]
+                    },
+                    {
+                        name: '在测',
+                        barWidth: 50,
+                        type: 'bar',
+                        stack: '总量',
+                       itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true,//是否展示
+                                },
+                                color: '#ffe100',
+                            }
+                        },
+                        data: data[1]
+                    },
+                    {
+                        name: '异常',
+                        type: 'bar',
+                        barWidth: 50,
+                        stack: '总量',
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true,//是否展示
+                                },
+                                color: '#ff332b',
+                            }
+                        },
+                        data: data[2]
+                    },
+                ]
+            };
+            myChart.setOption(option);
+        }
+
+        window.onload = function () {
+            $.ajax({
+                url: "/board_json",
+                type: "GET",
+                data: {"k1": "v1"},
+                success: function (data) {
+                    // 饼图
+                    Pie(data['pie']);
+                    // 柱状图
+                    Bar(data['bar']);
+                    console.log(data)
+                }
+            })
+        }
+    </script>
+
+
+    <script>
+
+        // bootstrap-table
+        $("#table").bootstrapTable({
+            toolbar: '#toolbar',                //自定义工具按钮
+            url: '/going_form',                           //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            undefinedText: '-',
+            pagination: true,                   //是否显示分页（*）
+            pageSize: 15,                       //每页的记录行数（*）
+            pageList: [10, 15, 20, 50, 100, 'All'], //可供选择的每页的行数（*）
+            paginationPreText: "上一页",
+            paginationNextText: "下一页",
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber: 1,                      //初始化加载第一页，默认第一页
+            search: false,                       //是否显示表格搜索
+            showColumns: false,                  //是否显示所有的列
+            showRefresh: false,                  //是否显示刷新按钮
+            minimumCountColumns: 2,             //最少允许的列数
+            showToggle: false,                   //是否显示详细视图和列表视图的切换按钮
+            sortName: 'id',
+            queryParamsType: "",
+
+            queryParams: function (params) {
+                var temp = {
+                    'pageSize': params.pageSize,
+                    'pageNumber': params.pageNumber,
+                    'searchText': params.searchText,
+                    'sortName': params.sortName,
+                    'sortOrder': params.sortOrder,
+                };
+                return temp;
+            },
+            columns: [
+                [
+                    {
+                        "title": "在测一览表",
+                        "halign": "center",
+                        "align": "center",
+                        "colspan": 11
+                    }
+                ],
+                [
+                    {
+                        field: 'id',
+                        title: "ID",
+                        valign: "middle",
+                        align: "center",
+                        colspan: 1,
+                        rowspan: 2,
+                        formatter: function (value, row, index) {
+                            //获取每页显示的数量
+                            var pageSize = $('#table').bootstrapTable('getOptions').pageSize;
+                            //获取当前是第几页
+                            var pageNumber = $('#table').bootstrapTable('getOptions').pageNumber;
+                            //返回序号，注意index是从0开始的，所以要加上1
+                            return pageSize * (pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {
+                        field: 'sn',
+                        title: 'SN',
+                        valign: "middle",
+                        align: "center",
+                        rowspan: 2
+                    },
+                    {
+                        field: "pn",
+                        title: "料号",
+                        valign: "middle",
+                        align: "center",
+                        colspan: 1,
+                        rowspan: 2,
+                    },
+                    {
+                        field: 'pn_desc',
+                        title: '料号描述',
+                        valign: "middle",
+                        align: "center",
+                        rowspan: 2
+                    },
+
+                    {
+                        field: 'p_name',
+                        title: "测试项目",
+                        valign: "middle",
+                        align: "center",
+                        colspan: 4,
+                        rowspan: 1
+                    },
+
+                    {
+                        field: 'start_time',
+                        title: "开始时间",
+                        valign: "middle",
+                        align: "center",
+                        colspan: 1,
+                        rowspan: 2
+                    },
+                    {
+                        field: 'over_time',
+                        title: "预计结束时间",
+                        valign: "middle",
+                        align: "center",
+                        colspan: 1,
+                        rowspan: 2
+                    },
+                    {
+                        field: 'remark',
+                        title: "备注",
+                        valign: "middle",
+                        align: "center",
+                        colspan: 1,
+                        rowspan: 2,
+                        formatter: function (value, row, index, field) {
+                            return "<span style='display: block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;' title='" + value + "'>" + value + "</span>";
+                        },
+                        // 内容过多显示 ......
+                        cellStyle: function (value, row, index, field) {
+                            return {
+                                css: {
+                                    "white-space": "nowrap",
+                                    "text-overflow": "ellipsis",
+                                    "overflow": "hidden",
+                                    "max-width": "150px"
+                                }
+                            };
+                        }
+
+                    }
+                ],
+                [
+                    {
+                        field: 'dd',
+                        title: '断电重启',
+                        valign: "middle",
+                        align: "center",
+                        rowspan: 1
+                    },
+                    {
+                        field: 'rcq',
+                        title: '软重启',
+                        valign: "middle",
+                        align: "center",
+                        rowspan: 1
+                    },
+                    {
+                        field: 'nc',
+                        title: '内存测试',
+                        valign: "middle",
+                        align: "center",
+                        rowspan: 1
+                    },
+                    {
+                        field: 'fb',
+                        title: '打流量（封包测试）',
+                        valign: "middle",
+                        align: "center",
+                        rowspan: 1
+                    }
+                ],
+            ]
+        });
+    </script>
+
+{% endblock %}
+

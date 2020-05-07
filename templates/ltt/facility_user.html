@@ -1,0 +1,454 @@
+{% extends 'basic/base.html' %}
+
+{% block title %}
+    设备状态
+{% endblock %}
+
+
+{% block main_content %}
+
+    <section class="wrapper">
+        <caption><h2 class="text-center">设备状态信息</h2></caption>
+        {% if request.session.login_user.authority == '系统管理员' or request.session.login_user.authority == '管理员' %}
+            <a data-toggle="modal" class="btn btn-default" href="/add/#add1">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;新增设备</a>
+            <form action="/ltt/facility" method="POST" style="display: inline" enctype='multipart/form-data'>
+                <div class="modal fade" id="add1" tabindex="-1" role="dialog" aria-labelledby="add11">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="add11">添加设备</h4>
+                            </div>
+                            <div class="modal-body">
+                                <ul style="line-height: 30px">
+
+                                    <li>
+                                        <label><span>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别:</span></label>
+                                        {% if not class_ %}
+                                            <a href="/ltt/config/class" style="color: red">暂未添加类别</a>
+                                        {% else %}
+                                        <select id="class_name" name="c_id">
+                                            {% for i in class_ %}
+                                                <option value="{{ i.id }}">{{ i.c_name }}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                        </select>
+                                    </li>
+                                    <li>
+                                        <label><span>机&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;种:</span></label>
+                                    {% if not kind %}
+                                        <a href="/ltt/config/kind" style="color: red">暂未添加机种</a>
+                                        {% else %}
+                                        <select name="k_id">{% for i in kind %}
+                                            <option value="{{ i.id }}">
+                                                {{ i.k_name }}
+                                            </option>{% endfor %}
+                                        {% endif %}
+                                        </select>
+                                    </li>
+                                    <li>
+                                        <label><span>S&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;N:&nbsp;</span></label>
+                                        <input class="text" type="text" name="sn" autocomplete="off"/>
+                                    </li>
+                                    <li>
+                                        <label><span>料&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:&nbsp;</span></label>
+                                        <input class="text" type="text" name="pn" autocomplete="off"/>
+                                    </li>
+                                    <li>
+                                        <label><span>料号描述:&nbsp;</span></label>
+                                        <input class="text" type="text" name="pn_desc" autocomplete="off"/>
+                                    </li>
+                                    <li>
+                                        <label><span>入库时间:&nbsp;</span></label>
+                                        <input id="put_time" type="text" name="put_time" autocomplete="off"/>
+                                    </li>
+                                    <li>
+                                        <label><span>出库时间:&nbsp;</span></label>
+                                        <input id="out_time" type="text" name="out_time" autocomplete="off"/>
+                                    </li>
+
+
+                                    <li>
+                                        <label><span>测试项目:&nbsp;</span></label>
+                                        {% if not project %}
+                                            <a href="/ltt/config/project" style="color: red">暂未添加测试项目</a>
+                                        {% else %}
+                                        {% for i in project %}
+                                            <label class="checkbox-row">
+                                                <input value="{{ i.id }}" type="checkbox" name="p_id"/>{{ i.p_name }}
+                                            </label>
+                                        {% endfor %}
+                                        {% endif %}
+{#                                            <select name="p_name">{% for i in project %}#}
+{#                                                <option value="{{ i.p_name }}">#}
+{#                                                    {{ i.p_name }}#}
+{#                                                </option>{% endfor %}#}
+{#                                            </select>#}
+                                        </select>
+                                    </li>
+                                    <li>
+                                        <label><span>开始时间:&nbsp;</span></label>
+                                        <input type="text" name="start_time" id="start_time" autocomplete="off">
+                                    </li>
+                                    <li>
+                                        <label><span>结束时间:&nbsp;</span></label>
+                                        <input type="text" name="over_time" id="over_time" autocomplete="off">
+                                    </li>
+                                    <li>
+                                        <label><span>测试结果:&nbsp;</span></label>
+                                        <select name="result">
+                                            <option value="On Going">On Going</option>
+                                            <option value="PASS">PASS</option>
+                                            <option value="FAIL">FAIL</option>
+                                        </select>
+                                    </li>
+                                    <li>
+                                        <label><span>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注&nbsp;:&nbsp;</span></label>
+                                        <input class="text" type="text" name="remark" autocomplete="off"/>
+                                    </li>
+                                    <li>
+                                        <label><span>测试Log:&nbsp;</span></label>
+                                        <input style="display: inline" class="text" type="file" name="log"/>
+                                    </li>
+                                    <li>
+                                        <label><span>操&nbsp;&nbsp;作&nbsp;&nbsp;人:&nbsp;</span></label>
+                                        {{ login_user.name }}
+                                    </li>
+
+                                    <div class="form-group form-actions">
+                                        {{ error }}
+                                        <div class="form-group form-actions modal-footer">
+                                            <button type="button" class="btn btn-default btn-sm"
+                                                    data-dismiss="modal">取消
+                                            </button>
+                                            <button id='add' type="submit" class="btn btn-primary btn-sm">保存
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <button data-toggle="modal" onclick="exportData()" class="btn btn-default">
+                <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>&nbsp;导出设备
+            </button>
+            <a href="/ltt/config" data-toggle="modal" class="btn btn-default">
+                <span class="fa fa-cog" aria-hidden="true"></span>&nbsp;配置信息
+            </a>
+
+        {% else %}
+
+        {% endif %}
+        <div id="toolbar" class="btn-group" style="display: inline">
+            <div class="form-inline form_search ng-pristine ng-valid" style=" display: inline">
+
+                <input style="" class="form-control input-sm ng-pristine ng-untouched ng-valid ng-empty" id="search-sn"
+                       name="search_sn" placeholder="SN号" autocomplete="off">
+                <input class="form-control input-sm ng-pristine ng-untouched ng-valid ng-empty" id="search-k_name"
+                       name="search_k_name" placeholder="机种名" autocomplete="off">
+                <input class="form-control input-sm ng-pristine ng-untouched ng-valid ng-empty" id="search_time"
+                       name="search_time" placeholder="选择入库时间" autocomplete="off">
+                <select class="form-control input-sm ng-pristine ng-untouched ng-valid ng-empty" id="search-result"
+                        name="search_result">
+                    <option value="">-- 测试结果 --</option>
+                    <option value="On Going">On Going</option>
+                    <option value="PASS">PASS</option>
+                    <option value="FAIL">FAIL</option>
+                </select>
+
+                <button id="search-button" class="btn btn-sm btn-primary"><span
+                        class="glyphicon glyphicon-search"></span>
+                </button>
+            </div>
+        </div>
+
+        <table id="table" class="table-sm text-center center table table-bordered"></table>
+
+    </section>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script src="../../static/table/js/hebing.js"></script>
+    <script>
+        {#// 二级联动#}
+        {#$("#class_name").change(function () {#}
+        {#    var c_name = $(this).val();#}
+            {#alert("welcome");#}
+        {#    $.ajax({#}
+        {#        url: '/ajax_project',#}
+        {##}
+        {#        data: {"c_name": $(this).val()},#}
+        {#        type: 'GET',#}
+        {#        dataType: 'json',#}
+        {#        success: function (data) {#}
+        {#            var content = '';#}
+        {#            $.each(data, function (i, item) {#}
+        {#                content += '<option value=' + item.p_name + '>' + item.p_name + '</option>'#}
+        {#            });#}
+        {#            $('#project_name').html(content)#}
+        {#        },#}
+        {##}
+        {#    });#}
+        {#});#}
+
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#search_time', //指定元素
+            range: true, // 开启范围选择
+            theme: '#0bcaff', // 自定义颜色
+        });
+        laydate.render({
+            elem: '#start_time', //指定元素
+            theme: '#0bcaff',
+        });
+        laydate.render({
+            elem: '#over_time', //指定元素
+            theme: '#0bcaff',
+        });
+        laydate.render({
+            elem: '#put_time', //指定元素
+            theme: '#0bcaff',
+        });
+        laydate.render({
+            elem: '#out_time', //指定元素
+            theme: '#0bcaff',
+        });
+
+        // bootstrap-table
+        $("#table").bootstrapTable({
+            toolbar: '#toolbar',                //自定义工具按钮
+            url: '/facility_json',                           //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            undefinedText: '-',
+            pagination: true,                   //是否显示分页（*）
+            pageSize: 15,                       //每页的记录行数（*）
+            pageList: [10, 15, 20, 50, 100, 'All'], //可供选择的每页的行数（*）
+            paginationPreText: "上一页",
+            paginationNextText: "下一页",
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber: 1,                      //初始化加载第一页，默认第一页
+            search: false,                       //是否显示表格搜索
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,             //最少允许的列数
+            showToggle: true,                   //是否显示详细视图和列表视图的切换按钮
+            sortName: 'id',
+            queryParamsType: "",
+
+            queryParams: function (params) {
+                var temp = {
+                    'pageSize': params.pageSize,
+                    'pageNumber': params.pageNumber,
+                    'searchText': params.searchText,
+                    'sortName': params.sortName,
+                    'sortOrder': params.sortOrder,
+
+                    //查询框中的参数传递给后台
+                    search_sn: $('#search-sn').val(), // 请求时向服务端传递的参数
+                    search_k_name: $('#search-k_name').val(), // 请求时向服务端传递的参数
+                    search_result: $('#search-result').val(), // 请求时向服务端传递的参数
+                    search_time: $('#search_time').val(), // 请求时向服务端传递的参数
+                };
+                return temp;
+            },
+
+            // 合并单元格
+            onLoadSuccess: function (data) {
+                var data = $('#table').bootstrapTable('getData', true);
+                mergeCells(data, "ltt_id", 1, $("#table")[0], ["c_name", "k_name", "pn", "put_time", "execute_user", "out_time", "remark"]);
+
+                mergeCells(data, "c_name", 1, $("#table")[0], ["c_name", "k_name", "sn", "pn", "put_time", "execute_user", "out_time", "remark"]);
+                mergeCells(data, "k_name", 1, $("#table")[0], ["c_name", "k_name", "sn", "pn", "put_time", "execute_user", "out_time", "remark"]);
+                mergeCells(data, "sn", 1, $("#table")[0], ["c_name", "k_name", "sn", "pn", "put_time", "execute_user", "out_time", "remark"]);
+                mergeCells(data, "pn", 1, $("#table")[0], ["c_name", "k_name", "sn", "pn", "put_time", "execute_user", "out_time", "remark"]);
+                mergeCells(data, "pn_desc", 1, $("#table")[0], ["c_name", "k_name", "sn", "pn", "put_time", "execute_user", "out_time", "remark"]);
+                mergeCells(data, "put_time", 1, $("#table")[0], ["c_name", "k_name", "sn", "pn", "put_time", "execute_user", "out_time", "remark"]);
+                mergeCells(data, "execute_user", 1, $("#table")[0], ["c_name", "k_name", "sn", "pn", "put_time", "execute_user", "out_time", "remark"]);
+                mergeCells(data, "remark", 1, $("#table")[0], ["c_name", "k_name", "sn", "pn", "put_time", "execute_user", "out_time", "remark"]);
+                mergeCells(data, "out_time", 1, $("#table")[0], ["c_name", "k_name", "sn", "pn", "put_time", "execute_user", "out_time", "remark"]);
+                mergeCells(data, "add_project", 1, $("#table")[0], ["c_name", "k_name", "sn", "pn", "put_time", "execute_user", "out_time", "remark"]);
+            },
+            columns: [
+                {
+                    field: 'ltt_id',
+                    title: 'ID',
+                    align: "center",//水平
+                    formatter: function (value, row, index) {
+                        //获取每页显示的数量
+                        var pageSize = $('#table').bootstrapTable('getOptions').pageSize;
+                        //获取当前是第几页
+                        var pageNumber = $('#table').bootstrapTable('getOptions').pageNumber;
+                        //返回序号，注意index是从0开始的，所以要加上1
+                        return pageSize * (pageNumber - 1) + index + 1;
+                    }
+                },
+                {
+                    field: 'c_name',
+                    title: '类别',
+                    align: "center",//水平
+                }, {
+                    field: 'k_name',
+                    title: '机种',
+                    align: "center",//水平
+                }, {
+                    field: 'sn',
+                    title: 'SN',
+                    align: "center",//水平
+                }, {
+                    field: 'pn',
+                    title: '料号',
+                    align: "center",//水平
+                }, {
+                    field: 'pn_desc',
+                    title: '料号描述',
+                    align: "center",//水平
+                    visible: false   //这一列隐藏
+                }, {
+                    field: 'put_time',
+                    title: '入库时间',
+                    align: "center",//水平
+
+                }, {
+                    field: 'execute_user',
+                    title: '操作人',
+                    align: "center",//水平
+                    visible: false   //这一列隐藏
+                }, {
+                    field: 'p_name',
+                    title: '测试项目',
+                    align: "center",//水平
+
+                }, {
+                    field: 'start_time',
+                    title: '开始时间',
+                    align: "center",//水平
+                    formatter: function (value, row, index) {
+                        if (value == 'None') {
+                            return ""
+                        } else {
+                            return value
+                        }
+                    }
+                }, {
+                    field: 'over_time',
+                    title: '结束时间',
+                    align: "center",//水平
+                    formatter: function (value, row, index) {
+                        if (value == 'None') {
+                            return ""
+                        } else {
+                            return value
+                        }
+                    }
+                }, {
+                    field: 'result',
+                    title: '测试结果',
+                    align: "center",//水平
+                    // 表格样式
+                    cellStyle: function (value, row, index) {
+                        if (value == 'PASS') {
+                            return {css: {"background-color": "#b2ffaa"}}
+                        }
+                        if (value == 'FAIL') {
+                            return {css: {"background-color": "#ff635c"}}
+                        }
+                        if (value == 'On Going') {
+                            return {css: {"background-color": "#f9ff9e"}}
+                        } else {
+                            return {css: {"background-color": ""}}
+                        }
+                    }
+                }, {
+                    field: 'log',
+                    title: 'Log',
+                    align: "center",//水平
+                    width: '1%',
+                    formatter: function (value, row, index) {
+                        if (value) {
+                            return "<a href='/ltt/facility/log/download/" + row["id"] + "'><i class='fa fa-file-text-o'></i></a> "
+                        } else {
+                            return ""
+                        }
+                    }
+                }, {
+                    field: 'remark',
+                    title: '备注',
+                    align: "center",//水平
+                    visible: true,  //这一列隐藏
+                    formatter: function (value, row, index, field) {
+                        return "<span style='display: block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;' title='" + value + "'>" + value + "</span>";
+                    },
+                    // 内容过多显示 ......
+                    cellStyle: function (value, row, index, field) {
+                        return {
+                            css: {
+                                "white-space": "nowrap",
+                                "text-overflow": "ellipsis",
+                                "overflow": "hidden",
+                                "max-width": "150px"
+                            }
+                        };
+                    }
+                },
+                {
+                    field: 'out_time',
+                    title: '出库时间',
+                    width: '7%',
+                    align: "center",//水平
+                    formatter: function (value, row, index) {
+                        if (value == 'None') {
+                            return ""
+                        } else {
+                            return value
+                        }
+                    }
+                },
+            ],
+        });
+
+
+        // 自定义按钮导出数据
+        function exportData() {
+            $('#table').tableExport({
+                type: 'xlsx',
+                exportDataType: "All",      //默认basic：只导出当前页的表格数据；all：导出所有数据；selected：导出选中的数据
+                ignoreColumn: ['ltt_id', 'operation', 'add_project'],            //忽略某一列的索引
+                fileName: '设备状态信息',              //文件名称设置
+                worksheetName: 'Sheet1',          //表格工作区名称
+                tableName: '设备状态数据表',
+                excelstyles: ['background-color', 'color', 'font-size', 'font-weight'],
+                //onMsoNumberFormat: DoOnMsoNumberFormat
+                onCellHtmlData: function (cell, row, col, data) {//处理导出内容,自定义某一行、某一列、某个单元格的内容
+                    console.info(data);
+                    return data;
+                },
+            });
+        }
+
+        // 搜索查询按钮触发事件
+        $(function () {
+            $("#search-button").click(function () {
+                $('#table').bootstrapTable(('refresh')); // 很重要的一步，刷新url！
+                $('#search-sn').val();
+                $('#search-k_name').val();
+                $('#search-result').val();
+                $('#search_time').val()
+            })
+        })
+    </script>
+
+{% endblock %}
+

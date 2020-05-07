@@ -1,0 +1,330 @@
+{% extends 'basic/base.html' %}
+{% block title %}
+    资产信息
+{% endblock %}
+
+{% block main_content %}
+
+    <section class="wrapper">
+        <caption><h2 class="text-center">资产信息</h2></caption>
+       {% if request.session.login_user.zgg_authority == '系统管理员' or request.session.login_user.zgg_authority == '管理员' %}
+            <form action="/zgg/bill" method="POST" style="display: inline" enctype='multipart/form-data'>
+
+                <a data-toggle="modal" class="btn btn-default" href="/add/#add1">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;新增治具</a>
+
+
+                <div class="modal fade" id="add1" tabindex="-1" role="dialog" aria-labelledby="add11">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="add11">添加治具</h4>
+                            </div>
+                            <div class="modal-body">
+                                <ul style="line-height: 25px">
+                                    <li>
+                                        <label><span>资产类别:</span></label>
+                                        <input class="text" type="text" name="zc_type"/>
+                                    </li>
+                                    <li>
+                                        <label><span>资产编号:</span></label>
+                                        <input class="text" type="text" name="zc_number"/>
+                                    </li>
+                                    <li>
+                                        <label><span>资产名称:</span></label>
+                                        <input class="text" type="text" name="zc_name"/>
+                                    </li>
+                                    <li>
+                                        <label><span>属&nbsp;&nbsp;性&nbsp;&nbsp;1:&nbsp;</span></label>
+                                        <input class="text" type="text" name="pro1"/>
+                                    </li>
+                                    <li>
+                                        <label><span>属&nbsp;&nbsp;性&nbsp;&nbsp;2:&nbsp;</span></label>
+                                        <input class="text" type="text" name="pro2"/>
+                                    </li>
+                                    <li>
+                                        <label><span>属&nbsp;&nbsp;性&nbsp;&nbsp;3:&nbsp;</span></label>
+                                        <input class="text" type="text" name="pro3"/>
+                                    </li>
+                                    <li>
+                                        <label><span>资产地点:</span></label>
+                                        <input class="text" type="text" name="zc_site"/>
+                                    </li>
+                                    <li>
+                                        <label><span>oa请求ID:</span></label>
+                                        <input class="text" type="text" name="oa_id"/>
+                                    </li>
+                                    <li>
+                                        <label><span>领&nbsp;&nbsp;用&nbsp;&nbsp;人:</span></label>
+                                        <input class="text" type="text" name="receive_name"/>
+                                    </li>
+                                    <li>
+                                        <label><span>贴&nbsp;&nbsp;标&nbsp;&nbsp;签:</span></label>
+                                        <select name="tag">
+                                            <option value="是">是</option>
+                                            <option value="否">否</option>
+                                        </select>
+                                    </li>
+                                    <li>
+                                        <label><span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态:&nbsp;</span></label>
+                                        <select name="state">
+                                            <option value="启用">启用</option>
+                                            <option value="报废">报废</option>
+                                        </select>
+                                    </li>
+                                    <li>
+                                        <label><span>申&nbsp;&nbsp;请&nbsp;&nbsp;单:</span></label>
+                                        <input style="display: inline" name="other_bill" type="file" id="other_bill">
+                                    </li>
+                                    <li>
+                                        <label><span>接&nbsp;&nbsp;收&nbsp;&nbsp;单:</span></label>
+                                        <input style="display: inline" name="reception_bill" type="file"
+                                               id="reception_bill">
+
+                                    </li>
+                                    <li>
+                                        <label><span>操作人员:</span></label>
+                                        {{ login_user.name }}
+                                    </li>
+                                    <li>
+                                        <div class="form-group form-actions">
+                                            {{ error }}
+                                            <div class="form-group form-actions modal-footer">
+                                                <button type="button" class="btn btn-default btn-sm"
+                                                        data-dismiss="modal">取消
+                                                </button>
+                                                <button id='add' type="submit" class="btn btn-primary btn-sm">保存
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+            <button data-toggle="modal" onclick="exportData()" class="btn btn-default">
+                <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>&nbsp;导出治具
+            </button>
+
+{#           <a data-toggle="modal" class="btn btn-default" href="/zgg/export_excel">#}
+{#               <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>&nbsp;导出治具</a>#}
+            <a data-toggle="modal" class="btn btn-default" href="/zgg/import_sql">
+                <span class="glyphicon glyphicon-open" aria-hidden="true"></span>&nbsp;批量导入</a>
+
+        {% else %}
+
+        {% endif %}
+        <div id="toolbar" class="btn-group" style="display: inline">
+            <div class="form-inline form_search ng-pristine ng-valid" style=" display: inline">
+
+                <input style="" class="form-control input-sm ng-pristine ng-untouched ng-valid ng-empty"
+                       id="search-zc_number"
+                       name="search_zc_number" placeholder="资产编号" autocomplete="off">
+                <input class="form-control input-sm ng-pristine ng-untouched ng-valid ng-empty" id="search-zc_site"
+                       name="search_zc_site" placeholder="资产地点" autocomplete="off">
+                <input class="form-control input-sm ng-pristine ng-untouched ng-valid ng-empty" id="search-oa_id"
+                       name="search_oa_id" placeholder="OA请求ID" autocomplete="off">
+                <select class="form-control input-sm ng-pristine ng-untouched ng-valid ng-empty" id="search-state"
+                        name="search_state">
+                    <option value="">全部</option>
+                    <option value="启用">启用</option>
+                    <option value="报废">报废</option>
+                </select>
+
+                <button id="search-button" class="btn btn-sm btn-primary"><span
+                        class="glyphicon glyphicon-search"></span>
+                </button>
+            </div>
+        </div>
+
+        <table id="table" class="table-sm text-center center table table-bordered"></table>
+
+    </section>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script>
+
+        // bootstrap-table
+        $("#table").bootstrapTable({
+            toolbar: '#toolbar',                //自定义工具按钮
+            url: '/zgg_bill_json',                           //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            undefinedText: '-',
+            pagination: true,                   //是否显示分页（*）
+            pageSize: 15,                       //每页的记录行数（*）
+            pageList: [20, 50, 100, 1000, 'All'], //可供选择的每页的行数（*）
+            paginationPreText: "上一页",
+            paginationNextText: "下一页",
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber: 1,                      //初始化加载第一页，默认第一页
+            search: false,                       //是否显示表格搜索
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,             //最少允许的列数
+            showToggle: true,                   //是否显示详细视图和列表视图的切换按钮
+            sortName: 'id',
+            queryParamsType: "",
+            theadClasses: "thead-blue",//设置thead-blue为表头样式
+
+            queryParams: function (params) {
+                var temp = {
+                    'pageSize': params.pageSize,
+                    'pageNumber': params.pageNumber,
+                    'searchText': params.searchText,
+                    'sortName': params.sortName,
+                    'sortOrder': params.sortOrder,
+
+                    //查询框中的参数传递给后台
+                    search_zc_number: $('#search-zc_number').val(), // 请求时向服务端传递的参数
+                    search_zc_site: $('#search-zc_site').val(), // 请求时向服务端传递的参数
+                    search_oa_id: $('#search-oa_id').val(), // 请求时向服务端传递的参数
+                    search_state: $('#search-state').val(), // 请求时向服务端传递的参数
+                };
+                return temp;
+            },
+            columns: [
+                {
+                    field: 'id',
+                    title: 'ID',
+                    align: "center",//水平
+                },
+                {
+                    field: 'zc_type',
+                    title: '资产类别',
+                    align: "center",//水平
+                }, {
+                    field: 'zc_number',
+                    title: '资产编号',
+                    align: "center",//水平
+                }, {
+                    field: 'zc_name',
+                    title: '资产名称',
+                    align: "center",//水平
+                }, {
+                    field: 'pro1',
+                    title: '属性1',
+                    align: "center",//水平
+                    visible: false,
+                }, {
+                    field: 'pro2',
+                    title: '属性2',
+                    align: "center",//水平
+                    visible: false   //这一列隐藏
+                }, {
+                    field: 'pro3',
+                    title: '属性3',
+                    align: "center",//水平
+                    visible: false
+                }, {
+                    field: 'zc_site',
+                    title: '资产地点',
+                    align: "center",//水平
+                }, {
+                    field: 'oa_id',
+                    title: 'OA请求ID',
+                    align: "center",//水平
+                },
+                {
+                    field: 'reception_bill',
+                    title: '接收单',
+                    align: "center",//水平
+                    width: '1%',
+                    visible: false,
+                }, {
+                    field: 'start_time',
+                    title: '录入时间',
+                    align: "center",//水平
+
+                }, {
+                    field: 'execute_user',
+                    title: '操作人',
+                    align: "center",//水平
+                    visible: false,
+                },{
+                    field: 'tag',
+                    title: '标签',
+                    align: "center",//水平
+                },{
+                    field: 'state',
+                    title: '状态',
+                    align: "center",//水平
+                },{
+                    field: 'receive_name',
+                    title: '领用人',
+                    align: "center",//水平
+
+                }, {
+                    field: 'other_bill',
+                    title: '申请单',
+                    align: "center",//水平
+                    visible: false,
+                },
+                {
+                    field: 'use_time',
+                    title: '使用天数',
+                    width: '7%',
+                    align: "center",//水平
+                }, {
+                    title: '操作',
+                    field: 'operation',
+                    align: "center",//水平
+                    // 自定义按钮
+                    formatter: function (value, row, index) {
+                        return "<a style='display: inline' href='/zgg/bill/edit/" + row["id"] + "'><button style='display: inline' class='btn btn-xs btn-default text-primary'>编辑</button></a> "
+                            + "<a style='display: inline' href='/zgg/bill/detail/" + row["id"] + "'><button style='display: inline' class=\"btn btn-xs btn-default text-primary\">详情</button></a>"
+                    }
+                },
+            ],
+        });
+
+
+        // 自定义按钮导出数据
+        function exportData() {
+            $('#table').tableExport({
+                type: 'xlsx',
+                exportDataType: "all",      //默认basic：只导出当前页的表格数据；all：导出所有数据；selected：导出选中的数据
+                ignoreColumn: ['id', 'use_time', 'operation'],            //忽略某一列的索引
+                fileName: '治具信息',              //文件名称设置
+                worksheetName: 'Sheet1',          //表格工作区名称
+                tableName: '资产信息表',
+                excelstyles: ['background-color', 'color', 'font-size', 'font-weight'],
+                //onMsoNumberFormat: DoOnMsoNumberFormat
+                onCellHtmlData: function (cell, row, col, data) {//处理导出内容,自定义某一行、某一列、某个单元格的内容
+                    console.info(data);
+                    return data;
+                },
+            });
+        }
+
+        // 搜索查询按钮触发事件
+        $(function () {
+            $("#search-button").click(function () {
+                $('#table').bootstrapTable(('refresh')); // 很重要的一步，刷新url！
+                $('#search-zc_number').val();
+                $('#search-zc_site').val();
+                $('#search-oa_id').val();
+                $('#search-state').val()
+            })
+        })
+    </script>
+
+{% endblock %}
+
+
+
+
+
+

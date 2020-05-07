@@ -1,0 +1,140 @@
+{% extends 'basic/base.html' %}
+{% block title %}
+    配置类别
+{% endblock %}
+
+
+{% block main_content %}
+
+    <section class="wrapper">
+        <caption><h2 class="text-center">配置类别信息</h2></caption>
+            <form action="/ltt/config/class" method="POST" style="display: inline" enctype='multipart/form-data'>
+
+                <a data-toggle="modal" class="btn btn-default" href="/add/#add1">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;新增类别</a>
+
+
+                <div class="modal fade" id="add1" tabindex="-1" role="dialog" aria-labelledby="add11">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="add11">添加类别</h4>
+                            </div>
+                            <div class="modal-body">
+                                <ul>
+                                    <li>
+                                        <label><span>类别名称:</span></label>
+                                        <input class="text" type="text" name="c_name" autocomplete="off"
+                                               autofocus="autofocus">
+                                    </li>
+                                    <li>
+                                        <div class="form-group form-actions">
+                                            {{ error }}
+                                            <div class="form-group form-actions modal-footer">
+                                                <button type="button" class="btn btn-default btn-sm"
+                                                        data-dismiss="modal">取消
+                                                </button>
+                                                <button id='add' type="submit" class="btn btn-primary btn-sm">保存
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+        <table id="table" data-toggle="table"
+               class="text-center center table table-bordered">
+
+
+        </table>
+
+    </section>
+
+    {#    </div>#}
+{% endblock %}
+
+
+
+{% block js %}
+
+    <script>
+
+    $("#table").bootstrapTable({
+        toolbar: '#toolbar',                //自定义工具按钮
+        url: '/class_json',                           //请求后台的URL（*）
+        method: 'get',                      //请求方式（*）
+        cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+        undefinedText: '-',
+        pagination: true,                   //是否显示分页（*）
+        pageSize: 15,                       //每页的记录行数（*）
+        pageList: [10, 15, 20, 50, 100, 'All'], //可供选择的每页的行数（*）
+        paginationPreText: "上一页",
+        paginationNextText: "下一页",
+        sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+        pageNumber: 1,                      //初始化加载第一页，默认第一页
+        search: false,                       //是否显示表格搜索
+        showColumns: false,                  //是否显示所有的列
+        showRefresh: false,                  //是否显示刷新按钮
+        minimumCountColumns: 2,             //最少允许的列数
+        showToggle: false,                   //是否显示详细视图和列表视图的切换按钮
+
+        queryParamsType: "",
+        queryParams: function (params) {
+            var temp = {
+                'pageSize': params.pageSize,
+                'pageNumber': params.pageNumber,
+                'searchText': params.searchText,
+                'sortName': params.sortName,
+                'sortOrder': params.sortOrder,
+            };
+            return temp;
+        },
+        columns: [
+            {
+                field: 'id',
+                title: 'ID',
+                width: '20%',
+                align: "center",//水平
+                // 自定义 ID
+                formatter: function (value, row, index) {
+                    //获取每页显示的数量
+                    var pageSize = $('#table').bootstrapTable('getOptions').pageSize;
+                    //获取当前是第几页
+                    var pageNumber = $('#table').bootstrapTable('getOptions').pageNumber;
+                    //返回序号，注意index是从0开始的，所以要加上1
+                    return pageSize * (pageNumber - 1) + index + 1;
+                }
+            },
+            {
+                field: 'c_name',
+                title: '类别',
+                align: "center",//水平
+            }, {
+                title: '功能',
+                field: 'delete_class',
+                width: '20%',
+                align: "center",//水平
+                // 自定义按钮
+                formatter: function (value, row, index) {
+                        return "<a href='/ltt/config/class/delete/" + row["id"] + "'><button class='btn btn-xs btn-default text-primary'><i class='fa fa-trash-o'></i></button></a> "
+                        {# + "<a href='/ltt/detail/" + row["id"] + "'><button class=\"btn btn-xs btn-default text-primary\">详情</button></a>"#}
+                    }
+            },
+        ],
+
+    });
+
+
+
+
+    </script>
+
+{% endblock %}
